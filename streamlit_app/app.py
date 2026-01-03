@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 
@@ -15,8 +16,9 @@ st.title("🚖 OLA Ride Analytics Dashboard")
 # Load Data (CSV – Deployment Ready)
 # =====================================
 def load_data():
-    return pd.read_csv("OLA_Rides_Riview.csv")
-
+    base_dir = os.path.dirname(__file__)  # points to streamlit_app/
+    file_path = os.path.join(base_dir, "OLA_Rides_Riview.csv")
+    return pd.read_csv(file_path)
 df = load_data()
 
 # =====================================
