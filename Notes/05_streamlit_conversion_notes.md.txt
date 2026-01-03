@@ -1,0 +1,10 @@
+# Streamlit Conversion Notes
+
+The Tableau dashboard insights were converted into a Streamlit web application.
+
+- Tableau-curated data was exported as CSV
+- Streamlit was used as a lightweight delivery layer
+- Filters and KPIs were recreated for interactivity
+- The app was deployed using Streamlit Community Cloud
+
+This step improved accessibility and shareability of insights.

@@ -1,0 +1,11 @@
+# Tableau Dashboard Logic
+
+Tableau Public was used to create interactive dashboards.
+
+Key visuals included:
+- Ride volume over time
+- Booking status distribution
+- Revenue by payment method
+- Vehicle type and customer performance analysis
+
+Tableau was used purely for visualization, not for data transformation.

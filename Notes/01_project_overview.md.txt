@@ -1,0 +1,11 @@
+# Project Overview
+
+This project was designed to build an end-to-end data analytics pipeline using a real-world ride booking dataset.
+
+The goal was to:
+- Clean and validate raw data
+- Store and analyze data using SQL Server
+- Build business dashboards in Tableau
+- Deliver insights through a Streamlit web application
+
+This structure closely mirrors how analytics projects are executed in real industry environments.

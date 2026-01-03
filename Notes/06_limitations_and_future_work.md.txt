@@ -1,0 +1,11 @@
+# Limitations & Future Enhancements
+
+Current limitations:
+- Tableau Public restricts live database connections
+- Streamlit app uses static exported data
+
+Future improvements:
+- Direct SQL Server connection in Streamlit
+- Authentication and role-based access
+- Real-time data refresh
+- Advanced predictive analytics

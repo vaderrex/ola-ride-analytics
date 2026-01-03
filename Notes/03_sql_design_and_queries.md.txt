@@ -1,0 +1,8 @@
+# SQL Server Design & Query Logic
+
+- Cleaned data was imported into SQL Server using appropriate data types
+- Primary keys were defined where applicable
+- SQL queries were optimized using aggregations and filters
+- Business KPIs such as revenue, ride count, and cancellation metrics were computed at the database level
+
+SQL Server acted as the single source of truth for analysis.

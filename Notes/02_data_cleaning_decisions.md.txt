@@ -1,0 +1,11 @@
+# Data Cleaning & Transformation Decisions
+
+Key decisions made during data cleaning:
+
+- Rows with invalid booking IDs were removed
+- Ratings were retained only for successful rides
+- Date fields were standardized to a single format
+- Numerical fields were rounded to one decimal place
+- Cancellation reasons were kept only for cancelled rides
+
+These rules ensured data consistency and business accuracy.
