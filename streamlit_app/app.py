@@ -16,9 +16,7 @@ st.title("🚖 OLA Ride Analytics Dashboard")
 # Load Data (CSV – Deployment Ready)
 # =====================================
 def load_data():
-    base_dir = os.path.dirname(__file__)
-    data_path = os.path.join(base_dir, "data", "OLA_Rides_Riview.csv")
-    return pd.read_csv(data_path)
+    return pd.read_csv("OLA_Rides_Riview.csv")
 
 df = load_data()
 
