@@ -76,8 +76,9 @@ st.subheader("📊 Key Metrics")
 
 total_rides = filtered_df.shape[0]
 
-completed_rides = filtered_df[
-    filtered_df["booking_status"] == "Success"
+completed_rides = df_filtered[
+    (df_filtered["booking_status"] == "Success") &
+    (df_filtered["incomplete_rides"] == "No")
 ].shape[0]
 
 cancelled_rides = filtered_df[
