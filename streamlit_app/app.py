@@ -15,12 +15,10 @@ st.title("🚖 OLA Ride Analytics Dashboard")
 # =====================================
 # Load Data (CSV – Deployment Ready)
 # =====================================
-@st.cache_data
 def load_data():
-    base_dir = os.path.dirname(__file__)  # streamlit_app directory
+    base_dir = os.path.dirname(__file__)
     data_path = os.path.join(base_dir, "data", "OLA_Rides_Riview.csv")
     return pd.read_csv(data_path)
-
 
 df = load_data()
 
