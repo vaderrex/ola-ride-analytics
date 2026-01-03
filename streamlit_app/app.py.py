@@ -16,7 +16,7 @@ st.title("🚖 OLA Ride Analytics Dashboard")
 # =====================================
 @st.cache_data
 def load_data():
-    return pd.read_csv(r"C:\Users\richa\OneDrive\Desktop\ola-ride-analytics\streamlit_app\data\OLA_Rides_Riview.csv")
+    return pd.read_csv("data/OLA_Rides_Riview.csv")
 
 
 df = load_data()
