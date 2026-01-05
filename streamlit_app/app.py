@@ -2,6 +2,73 @@ import os
 import streamlit as st
 import pandas as pd
 
+#  CSS
+st.markdown("""
+<style>
+
+/* ================================
+   SIDEBAR (FILTER PANEL)
+================================ */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0E1117 0%, #0B0F14 100%);
+    border-right: 1px solid #1f2937;
+}
+
+/* FILTER CONTAINERS */
+section[data-testid="stSidebar"] .stMultiSelect,
+section[data-testid="stSidebar"] .stTextInput {
+    background-color: #111827;
+    border-radius: 12px;
+    padding: 6px;
+    transition: all 0.25s ease;
+}
+
+/* HOVER GLOW */
+section[data-testid="stSidebar"] .stMultiSelect:hover,
+section[data-testid="stSidebar"] .stTextInput:hover {
+    box-shadow: 0 0 14px rgba(0, 230, 118, 0.45);
+    transform: translateY(-1px);
+}
+
+/* SELECTED TAGS (CHIPS) */
+span[data-baseweb="tag"] {
+    background-color: #00E676 !important;
+    color: #0E1117 !important;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* ================================
+   KPI CARDS
+================================ */
+[data-testid="stMetric"] {
+    background: linear-gradient(145deg, #111827, #0B0F14);
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #1f2937;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+}
+
+/* ================================
+   TABLE STYLING
+================================ */
+[data-testid="stDataFrame"] {
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+}
+
+</style>
+""", unsafe_allow_html=True)
+ 
+# =====================================
+# Import Dashboard Sections
+# =====================================
+from ui.overall import overall_dashboard
+from ui.vehicle_type import vehicle_type_dashboard
+from ui.revenue import revenue_dashboard
+from ui.cancellation import cancellation_dashboard
+from ui.ratings import ratings_dashboard
+
 # =====================================
 # Page Configuration
 # =====================================
@@ -12,13 +79,27 @@ st.set_page_config(
 
 st.title("🚖 OLA Ride Analytics Dashboard")
 
+
+# =====================================
+# Dashboard Tabs (PPT → Streamlit)
+# =====================================
+tabs = st.tabs([
+    "Overall",
+    "Vehicle Type",
+    "Revenue",
+    "Cancellation",
+    "Ratings"
+])
+
 # =====================================
 # Load Data (CSV – Deployment Ready)
 # =====================================
+@st.cache_data
 def load_data():
-    base_dir = os.path.dirname(__file__)  # points to streamlit_app/
-    file_path = os.path.join(base_dir, "OLA_Rides_Riview.csv")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir,"OLA_Rides_Riview.csv")
     return pd.read_csv(file_path)
+
 
 df = load_data()
 
@@ -81,11 +162,8 @@ if search_id:
     ]
 
 # =====================================
-# Key Metrics (CORRECT BUSINESS LOGIC)
+# KPI CALCULATIONS (KEEPED GLOBAL – CORRECT)
 # =====================================
-st.divider()
-st.subheader("📊 Key Metrics")
-
 total_rides = filtered_df.shape[0]
 
 completed_rides = filtered_df[
@@ -115,30 +193,59 @@ avg_customer_rating = round(
 )
 
 # =====================================
-# KPI Display
+# TAB 1: OVERALL DASHBOARD
 # =====================================
-col1, col2, col3, col4, col5 = st.columns(5)
+with tabs[0]:
+    st.subheader("📈 Key Metrics")
 
-col1.metric("Total Rides", total_rides)
-col2.metric("Completed Rides", completed_rides)
-col3.metric("Incomplete Rides", incomplete_rides)
-col4.metric("Cancelled Rides", cancelled_rides)
-col5.metric("Cancellation Rate (%)", cancellation_rate)
 
-st.caption(
-    "Note: Successful bookings with incomplete rides (e.g., Customer Demand) "
-    "are excluded from Completed Rides and tracked separately."
-)
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    col1.metric("Total Rides", total_rides)
+    col2.metric("Completed Rides", completed_rides)
+    col3.metric("Incomplete Rides", incomplete_rides)
+    col4.metric("Cancelled Rides", cancelled_rides)
+    col5.metric("Cancellation Rate (%)", cancellation_rate)
+
+    st.caption(
+        "Note: Successful bookings with incomplete rides (e.g., Customer Demand) "
+        "are excluded from Completed Rides and tracked separately."
+    )
+
+    st.divider()
+    st.subheader("📄 Ride Data Preview")
+    st.dataframe(filtered_df, use_container_width=True)
+
+    st.divider()
+    overall_dashboard(filtered_df)
 
 # =====================================
-# Data Preview
+# TAB 2: VEHICLE TYPE
 # =====================================
-st.divider()
-st.subheader("📄 Ride Data Preview")
-st.dataframe(filtered_df, use_container_width=True)
+with tabs[1]:
+    vehicle_type_dashboard(filtered_df)
+
+
+# =====================================
+# TAB 3: REVENUE
+# =====================================
+with tabs[2]:
+    revenue_dashboard(filtered_df)
+
+# =====================================
+# TAB 4: CANCELLATION
+# =====================================
+with tabs[3]:
+    cancellation_dashboard(filtered_df)
+
+# =====================================
+# TAB 5: RATINGS
+# =====================================
+with tabs[4]:
+    ratings_dashboard(filtered_df)
 
 # =====================================
 # Footer
 # =====================================
 st.divider()
-st.caption("Built with Streamlit • Python (Data sourced from cleaned CSV)")
+st.caption("Built with Streamlit • Python • Data sourced from cleaned CSV")
