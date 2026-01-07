@@ -26,7 +26,7 @@ st.markdown("""
    MAIN APP BACKGROUND
 ================================ */
 .stApp {
-    background: linear-gradient(135deg, #abb4db, #5261a1, #25398f);
+    background: linear-gradient(135deg, #1c123d, #5261a1, #25398f);
     color: #e5e7eb;
 }
 
