@@ -2,38 +2,60 @@ import os
 import streamlit as st
 import pandas as pd
 
-#  CSS
+# =====================================
+# PAGE CONFIG (MUST BE FIRST STREAMLIT CALL)
+# =====================================
+st.set_page_config(
+    page_title="OLA Ride Analytics",
+    layout="wide"
+)
+
+# =====================================
+# ADVANCED UI CSS
+# =====================================
 st.markdown("""
 <style>
 
 /* ================================
-   SIDEBAR (FILTER PANEL)
+   MAIN APP BACKGROUND
+================================ */
+.stApp {
+    background: linear-gradient(135deg, #020617, #020b1c, #020617);
+    color: #e5e7eb;
+}
+
+/* ================================
+   SIDEBAR (LIGHTER FOR LOGO VISIBILITY)
 ================================ */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0E1117 0%, #0B0F14 100%);
+    background: linear-gradient(
+        180deg,
+        #7c91c2 0%,
+        #0b1220 100%
+    );
     border-right: 1px solid #1f2937;
 }
 
-/* FILTER CONTAINERS */
+/* Sidebar text */
+section[data-testid="stSidebar"] * {
+    color: #e5e7eb;
+}
+
+/* ================================
+   SIDEBAR FILTER CONTAINERS
+================================ */
 section[data-testid="stSidebar"] .stMultiSelect,
-section[data-testid="stSidebar"] .stTextInput {
-    background-color: #111827;
+section[data-testid="stSidebar"] .stTextInput,
+section[data-testid="stSidebar"] .stSlider {
+    background-color: #020b1c;
     border-radius: 12px;
     padding: 6px;
-    transition: all 0.25s ease;
 }
 
-/* HOVER GLOW */
-section[data-testid="stSidebar"] .stMultiSelect:hover,
-section[data-testid="stSidebar"] .stTextInput:hover {
-    box-shadow: 0 0 14px rgba(0, 230, 118, 0.45);
-    transform: translateY(-1px);
-}
-
-/* SELECTED TAGS (CHIPS) */
+/* Selected chips */
 span[data-baseweb="tag"] {
     background-color: #00E676 !important;
-    color: #0E1117 !important;
+    color: #020617 !important;
     font-weight: 600;
     border-radius: 6px;
 }
@@ -42,26 +64,40 @@ span[data-baseweb="tag"] {
    KPI CARDS
 ================================ */
 [data-testid="stMetric"] {
-    background: linear-gradient(145deg, #111827, #0B0F14);
+    background: linear-gradient(145deg, #020b1c, #020617);
     padding: 18px;
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid #1f2937;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.45);
 }
 
 /* ================================
    TABLE STYLING
 ================================ */
 [data-testid="stDataFrame"] {
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid #1f2937;
 }
 
 </style>
 """, unsafe_allow_html=True)
- 
+
+st.markdown(
+    """
+    <div style="
+        background-color:#020617;
+        padding:16px;
+        border-radius:12px;
+        text-align:center;
+        margin-top:0px;
+        margin-bottom:12px;
+    ">
+    """,
+    unsafe_allow_html=True
+)
+
 # =====================================
-# Import Dashboard Sections
+# IMPORT DASHBOARD SECTIONS
 # =====================================
 from ui.overall import overall_dashboard
 from ui.vehicle_type import vehicle_type_dashboard
@@ -70,18 +106,12 @@ from ui.cancellation import cancellation_dashboard
 from ui.ratings import ratings_dashboard
 
 # =====================================
-# Page Configuration
+# TITLE
 # =====================================
-st.set_page_config(
-    page_title="OLA Ride Analytics",
-    layout="wide"
-)
-
 st.title("🚖 OLA Ride Analytics Dashboard")
 
-
 # =====================================
-# Dashboard Tabs (PPT → Streamlit)
+# DASHBOARD TABS
 # =====================================
 tabs = st.tabs([
     "Overall",
@@ -92,47 +122,75 @@ tabs = st.tabs([
 ])
 
 # =====================================
-# Load Data (CSV – Deployment Ready)
+# LOAD DATA
 # =====================================
 @st.cache_data
 def load_data():
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir,"OLA_Rides_Riview.csv")
+    file_path = os.path.join(base_dir, "OLA_Rides_Riview.csv")
     return pd.read_csv(file_path)
-
 
 df = load_data()
 
 # =====================================
-# Data Cleanup (Presentation Layer Only)
+# DATA CLEANUP (SAFE)
 # =====================================
 df = df.drop(columns=["vehicle_images", "unnamed_20"], errors="ignore")
 
 # =====================================
-# Sidebar Filters
+# SIDEBAR (LOGO + FILTERS)
 # =====================================
-st.sidebar.header("🔍 Filters")
+with st.sidebar:
 
-status_filter = st.sidebar.multiselect(
-    "Booking Status",
-    options=df["booking_status"].dropna().unique(),
-    default=df["booking_status"].dropna().unique()
-)
+    # ---- LOGO CARD ----
+    st.markdown(
+        """
+        <div style="
+            background-color:#020617;
+            padding:16px;
+            border-radius:12px;
+            text-align:center;
+            margin-bottom:12px;
+        """,
+        unsafe_allow_html=True
+    )
+    st.image("ola_logo.png", width=500)
+  
 
-vehicle_filter = st.sidebar.multiselect(
-    "Vehicle Type",
-    options=df["vehicle_type"].dropna().unique(),
-    default=df["vehicle_type"].dropna().unique()
-)
+    st.subheader("🔍 Filters")
 
-payment_filter = st.sidebar.multiselect(
-    "Payment Method",
-    options=df["payment_method"].dropna().unique(),
-    default=df["payment_method"].dropna().unique()
-)
+    status_filter = st.multiselect(
+        "Booking Status",
+        options=df["booking_status"].dropna().unique(),
+        default=df["booking_status"].dropna().unique(),
+        key="status_filter"
+    )
+
+    vehicle_filter = st.multiselect(
+        "Vehicle Type",
+        options=df["vehicle_type"].dropna().unique(),
+        default=df["vehicle_type"].dropna().unique(),
+        key="vehicle_filter"
+    )
+
+    payment_filter = st.multiselect(
+        "Payment Method",
+        options=df["payment_method"].dropna().unique(),
+        default=df["payment_method"].dropna().unique(),
+        key="payment_filter"
+    )
+
+    st.subheader("⚙ Advanced Filters")
+
+    rating_range = st.slider(
+        "Customer Rating",
+        0.0, 5.0, (0.0, 5.0), 0.5,
+        key="rating_filter"
+    )
+
 
 # =====================================
-# Apply Filters (DEFINE filtered_df ONCE)
+# APPLY FILTERS (DEFINE filtered_df ONCE)
 # =====================================
 filtered_df = df.copy()
 
@@ -151,8 +209,14 @@ if payment_filter:
         filtered_df["payment_method"].isin(payment_filter)
     ]
 
+filtered_df = filtered_df[
+    filtered_df["customer_rating"].between(
+        rating_range[0], rating_range[1]
+    )
+]
+
 # =====================================
-# Search Booking ID
+# SEARCH BOOKING ID
 # =====================================
 search_id = st.text_input("🔎 Search Booking ID")
 
@@ -162,7 +226,7 @@ if search_id:
     ]
 
 # =====================================
-# KPI CALCULATIONS (KEEPED GLOBAL – CORRECT)
+# KPI CALCULATIONS
 # =====================================
 total_rides = filtered_df.shape[0]
 
@@ -179,10 +243,9 @@ cancelled_rides = filtered_df[
     filtered_df["booking_status"].str.contains("Cancelled", case=False, na=False)
 ].shape[0]
 
-cancellation_rate = (
-    round((cancelled_rides / total_rides) * 100, 2)
-    if total_rides > 0 else 0.0
-)
+cancellation_rate = round(
+    (cancelled_rides / total_rides) * 100, 2
+) if total_rides > 0 else 0.0
 
 avg_customer_rating = round(
     filtered_df[
@@ -193,14 +256,12 @@ avg_customer_rating = round(
 )
 
 # =====================================
-# TAB 1: OVERALL DASHBOARD
+# TAB 1: OVERALL
 # =====================================
 with tabs[0]:
     st.subheader("📈 Key Metrics")
 
-
     col1, col2, col3, col4, col5 = st.columns(5)
-
     col1.metric("Total Rides", total_rides)
     col2.metric("Completed Rides", completed_rides)
     col3.metric("Incomplete Rides", incomplete_rides)
@@ -208,8 +269,7 @@ with tabs[0]:
     col5.metric("Cancellation Rate (%)", cancellation_rate)
 
     st.caption(
-        "Note: Successful bookings with incomplete rides (e.g., Customer Demand) "
-        "are excluded from Completed Rides and tracked separately."
+        "Note: Successful bookings with incomplete rides are tracked separately."
     )
 
     st.divider()
@@ -224,7 +284,6 @@ with tabs[0]:
 # =====================================
 with tabs[1]:
     vehicle_type_dashboard(filtered_df)
-
 
 # =====================================
 # TAB 3: REVENUE
@@ -245,7 +304,7 @@ with tabs[4]:
     ratings_dashboard(filtered_df)
 
 # =====================================
-# Footer
+# FOOTER
 # =====================================
 st.divider()
 st.caption("Built with Streamlit • Python • Data sourced from cleaned CSV")
