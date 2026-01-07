@@ -126,8 +126,11 @@ tabs = st.tabs([
 # =====================================
 @st.cache_data
 def load_data():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir, "OLA_Rides_Riview.csv")
+  BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGO_PATH = os.path.join(BASE_DIR, "assets", "ola_logo.png")
+
+st.image(LOGO_PATH, width=140)
+
     return pd.read_csv(file_path)
 
 df = load_data()
