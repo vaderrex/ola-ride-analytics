@@ -1,7 +1,11 @@
 import os
 import streamlit as st
 import pandas as pd
-
+# =====================================
+# LOAD LOGO
+# =====================================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGO_PATH = os.path.join(BASE_DIR, "assets", "ola_logo.png")
 # =====================================
 # PAGE CONFIG (MUST BE FIRST STREAMLIT CALL)
 # =====================================
@@ -131,11 +135,7 @@ def load_data():
     return pd.read_csv(file_path)
 df = load_data()
 
-# =====================================
-# LOAD LOGO
-# =====================================
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOGO_PATH = os.path.join(BASE_DIR, "assets", "ola_logo.png")
+
 
 # =====================================
 # DATA CLEANUP (SAFE)
