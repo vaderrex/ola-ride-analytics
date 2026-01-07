@@ -6,6 +6,7 @@ import pandas as pd
 # =====================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGO_PATH = os.path.join(BASE_DIR, "assets","ola_logo.png")
+st.image("ola_logo.png", width=300)
 # =====================================
 # PAGE CONFIG (MUST BE FIRST STREAMLIT CALL)
 # =====================================
@@ -159,7 +160,7 @@ with st.sidebar:
         """,
         unsafe_allow_html=True
     )
-    st.image("ola_logo.png", width=300)
+    
   
 
     st.subheader("🔍 Filters")
